@@ -1,0 +1,156 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside]{article}
+
+\usepackage{lipsum} % Package to generate dummy text throughout this template
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+%\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=20mm, bottom=20mm, left=15mm,columnsep=15pt]{geometry} % Document margins
+\usepackage{multicol} % Used for the two-column layout of the document
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Cefet MG / UFMG $\bullet$ Abril 2016} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\vspace{-15mm}\fontsize{10pt}{10pt}\selectfont\textbf{Relação entre Publicações na Imprensa e em Redes Sociais com o Desempenho de Ações na Bolsa de Valores - Pré-projeto}} % Article title
+\author{
+\normalsize Luiz Henrique Maia Cruz \\ % Your name
+\normalsize Cefet MG / UFMG \\ % Your institution
+\vspace{-5mm}
+}
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % Two-column layout throughout the main article text
+
+\section{Introdução}
+
+\lettrine[nindent=0em,lines=3]{E} ste trabalho tem por objetivo estabelecer relações entre informações publicadas na mídia e em redes sociais com o desempenho de ações na bolsa de valores.
+
+As informações disponíveis ao público influenciam a tomada de decisão dos investidores e portanto tem reflexo no preço das ações \cite{ChanChui:2001}. Neste projeto tentaremos quantificar a relevância das  informações divulgadas, considerando a fonte da notícia, o volume de veículos de informação que a divulgaram e a repercussão em redes sociais.
+
+A partir dos dados extraídos e quantificados vamos procurar estabelecer relações com séries históricas de preços de ações. As relações estabelecidas poderão culminar na criação de um indicador a ser utilizado em operações futuras na bolsa.
+
+Para abordar esse problema utilizaremos técnicas de mineração de dados como algoritmos de classificação e agrupamentos. Técnicas de análise de sentimento serão utilizadas para classificar a opinião expressa nas diversas fontes de notícias. No contexto do mercado de ações, classificar se uma notícia é positiva ou negativa, significa inferir se o conteúdo daquela notícia é capaz de interferir positiva ou negativamente no preço daquela ação \cite{ChanChui:2001}.
+
+Além de artigos, notícias e postagens extraídas de portais de notícias e redes sociais, serão utilizados no projeto um conjunto de dados extraído do serviço \emph{Bloomberg Professional}. Esse serviço disponibiliza em tempo real notícias e análises do mercado financeiro.
+
+%------------------------------------------------
+
+\section{Trabalhos Relacionados}
+
+Em \cite{Mittermayer:2004} é descrito o \emph{NewsCATS}, um sistema para prever tendências nos preços das ações no momento imediatamente após a publicação de notícias na imprensa. \emph{NewsCATS} trabalha com três componentes, o primeiro utiliza técnicas de pré-processamento para recuperar informações relevantes, o segundo classifica as informações em categorias e o terceiro deriva, a partir das informações fornecidas pelos outros dois componentes, estratégias para investimento.
+
+O trabalho de \cite{SchumakerChen:2010} aborda a utilização de uma síntese de técnicas de linguística, finanças e estatística para criar o \emph{Arizona Financial Text System}, um sistema para previsão de preços discretos de ações.
+
+Um exemplo de trabalho utilizando redes sociais está presente em \cite{SulDennisYuan:2014}. Nesse trabalho os autores utilizam informações do \emph{Twitter} para avaliar a influência da disseminação de informações, dessa rede social, sobre o preço das ações na bolsa.
+
+
+%------------------------------------------------
+
+\section{Desenvolvimento}
+
+O desenvolvimento deste trabalho inclui as seguintes etapas:
+\begin{enumerate}
+\item Levantamento de dados históricos de ações, notícias da imprensa e postagens em redes sociais.
+\item Definição das técnicas de pré-processamento e representação dos dados a serem utilizadas.
+\item Escolha do algorítimo a ser utilizado para levantar as possíveis relações entre os dados da bolsa e as notícias.
+\item Estudo das relações levantadas para tentar derivar um indicador.
+\item Teste do indicador sobre outra massa de dados
+\item Avaliação dos resultados.
+\end{enumerate}
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem[Chan and Chui, 2001]{ChanChui:2001}
+Chan, Y., Chui, A., \& Kwok, C. (2001).
+\newblock The impact of salient political and economic news on the trading activity.
+\newblock {\em Pacific-Basin Finance Journal}, Volume 9, Issue 3, June 2001, Pages 195–217.
+
+\bibitem[Mittermayer, 2004]{Mittermayer:2004}
+Mittermayer, M.-A., C. (2004).
+\newblock Forecasting Intraday Stock Price Trends with Text Mining Techniques.
+\newblock {\em Proceedings of the 10th Annual Hawaii International Conference on System Sciences. Big Island,
+Hawaii: IEEE Computer Society}.
+
+\bibitem[Schumaker and Chen, 2010]{SchumakerChen:2010}
+Schumaker, R. P., \& Chen, H. , C. (2010).
+\newblock A Discrete Stock Price Prediction Engine Based on Financial News.
+\newblock {\em Computer}, Vol. 43, No. 1 , 51-56.
+
+\bibitem[Sul and Dennis and Yuan, 2014]{SulDennisYuan:2014}
+Sul, H. K., Dennis, A. R., Yuan, L. (2014).
+\newblock Trading on Twitter: The Financial Information Content of Emotion in Social Media
+\newblock {\em Hawaii International Conference on System Science}, 2014 47th.
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+
+\end{document}
