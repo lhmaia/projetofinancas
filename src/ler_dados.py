@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from acao import Acao, Candle
 from datetime import datetime
+from matplotlib import pyplot as plt
 
 #f = open('../Dados/20150725_candles_ibov_15min_10campos_comCabecalho.txt', 'r')
 f = open('../Dados/dadosTrabalho.txt', 'r')
@@ -40,7 +41,22 @@ print 'Numero de acoes: ' + str(len(acoes))
 for acao in acoes:
     print acao.codigo + ', numero de candles: ' + str(len(acao.candles))
 
+acoes[0].plotar()
+
+'''
+x=[]
+y=[]
 for i in range(20):
+    y.append(acoes[0].candles[i].fechamento_atual)
     print acoes[0].candles[i]
+for acao in acoes:
+    for candle in acao.candles:
+        x.append(candle.datahora)
+        y.append(candle.fechamento_atual)
+
+    plt.ylabel(acao.codigo)
+    plt.plot(x, y)
+    plt.show()
+'''
 
 f.close()

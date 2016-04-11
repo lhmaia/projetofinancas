@@ -1,4 +1,7 @@
 #codigo,fechamento_atual,abertura,maximo,minimo,fechamento_anterior,negocios,quantidade_papeis,volume_financeiro,datahora
+
+from matplotlib import pyplot as plt
+
 class Candle:
     '''classe contendo os valores de um candle'''
 
@@ -25,4 +28,12 @@ class Acao:
     def __eq__(self, other):
         return self.codigo == other.codigo
 
-
+    def plotar(self):
+        x = []
+        y = []
+        for candle in self.candles:
+            x.append(candle.datahora)
+            y.append(candle.fechamento_atual)
+        plt.ylabel(self.codigo)
+        plt.plot(x, y)
+        plt.show()
