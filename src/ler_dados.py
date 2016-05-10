@@ -41,22 +41,66 @@ print 'Numero de acoes: ' + str(len(acoes))
 for acao in acoes:
     print acao.codigo + ', numero de candles: ' + str(len(acao.candles))
 
-acoes[0].plotar()
+inicial = datetime.strptime('20000101', '%Y%m%d')
+final = datetime.strptime('20150101', '%Y%m%d')
+#acoes[0].plotar(inicial, final)
 
-'''
+
 x=[]
 y=[]
-for i in range(20):
-    y.append(acoes[0].candles[i].fechamento_atual)
-    print acoes[0].candles[i]
-for acao in acoes:
-    for candle in acao.candles:
+ultimo = datetime.strptime('1800', '%H%M')
+
+for candle in acoes[3].candles:
+    if candle.datahora >= inicial and candle.datahora <= final:# and candle.datahora.time() == ultimo.time():
+        #print str(candle.datahora) + ': ' + str(candle.fechamento_atual)
         x.append(candle.datahora)
         y.append(candle.fechamento_atual)
 
-    plt.ylabel(acao.codigo)
-    plt.plot(x, y)
-    plt.show()
+plt.ylabel(acao.codigo)
+plt.plot(x, y)
+#plt.show()
+
+
+d = open('data.txt')
+f = open('teste.txt')
+
+t = []
+s = []
+
+anterior = 0
+
+for i in range(0,2118):
+    auxX = d.readline()
+    auxY = f.readline()
+    auxY = float(auxY[:-1])
+    dt = datetime.strptime(auxX[:-1],'%d/%m/%Y')
+    if dt >= inicial and dt <= final:
+        #print auxX[:-1] + ': ' + auxY[:-1]
+        t.append(dt)
+        if auxY == 0:
+            auxY = anterior
+        else:
+            auxY = auxY - 6
+        anterior = auxY
+        s.append(auxY)
+
 '''
+for linha in d:
+    #print datetime.strptime(linha[:-1],'%d/%m/%Y')
+    dt = datetime.strptime(linha[:-1],'%d/%m/%Y')
+    if dt >= inicial and dt <= final:
+        t.append(dt)
+
+
+for linha in f:
+    if linha[:-1] == '0':
+        linha = anterior
+
+    anterior = linha
+    s.append(linha)
+'''
+plt.plot(t,s)
+plt.show()
+
 
 f.close()

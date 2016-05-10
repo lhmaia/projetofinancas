@@ -1,5 +1,6 @@
 #codigo,fechamento_atual,abertura,maximo,minimo,fechamento_anterior,negocios,quantidade_papeis,volume_financeiro,datahora
 
+from datetime import datetime
 from matplotlib import pyplot as plt
 
 class Candle:
@@ -28,12 +29,19 @@ class Acao:
     def __eq__(self, other):
         return self.codigo == other.codigo
 
-    def plotar(self):
+    def plotar(self, data_inicial = None, data_final = None):
         x = []
         y = []
+        if data_inicial is None:
+            data_inicial = datetime.strptime('19000101', '%Y%m%d')
+        if data_final is None:
+            data_final = datetime.strptime('21000101', '%Y%m%d')
+
+
         for candle in self.candles:
-            x.append(candle.datahora)
-            y.append(candle.fechamento_atual)
+            if candle.datahora >= data_inicial and candle.datahora <= data_final:
+                x.append(candle.datahora)
+                y.append(candle.fechamento_atual)
         plt.ylabel(self.codigo)
         plt.plot(x, y)
         plt.show()
