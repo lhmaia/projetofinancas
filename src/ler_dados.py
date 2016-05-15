@@ -3,47 +3,50 @@ from acao import Acao, Candle
 from datetime import datetime
 from matplotlib import pyplot as plt
 
-#f = open('../Dados/20150725_candles_ibov_15min_10campos_comCabecalho.txt', 'r')
-f = open('../Dados/dadosTrabalho.txt', 'r')
-
-acoes = []
-
-#descarta cabecalho
-f.readline()
-
-for linha in f:
-    if 'PETR4' in linha:
-        tmp = linha.split(',') #[0: linha.find(',')]
-        a = Acao(tmp[0])
-        
-        c = Candle()
-        c.fechamento_atual = tmp[1]
-        c.abertura = tmp[2]
-        c.maximo = tmp[3]
-        c.minimo = tmp[4]
-        c.fechamento_anterior = tmp[5]
-        c.negocios = tmp[6]
-        c.quantidade_papeis = tmp[7]
-        c.volume_financeiro = tmp[8]
-        c.datahora = datetime.strptime(tmp[9][:-1], '%Y%m%d%H%M')
-
-        if not a in acoes:
-            acoes.append(a)
-            acoes[acoes.index(a)].candles.append(c)
-        else:
-            acoes[acoes.index(a)].candles.append(c)
-
-
-print 'Numero de acoes: ' + str(len(acoes))
-
-#acoes.sort(cmp=lambda x,y: cmp(x.codigo, y.codigo))
-
-for acao in acoes:
-    print acao.codigo + ', numero de candles: ' + str(len(acao.candles))
-
-inicial = datetime.strptime('20140101', '%Y%m%d')
-final = datetime.strptime('20141231', '%Y%m%d')
-acoes[0].plotar(inicial, final)
+def carrega_candles():
+    #f = open('../Dados/dadosTrabalho.txt', 'r')
+    f = open('../Dados/20150725_candles_ibov_15min_10campos_comCabecalho.txt', 'r')
+    
+    
+    acoes = []
+    
+    #descarta cabecalho
+    f.readline()
+    
+    for linha in f:
+        if 'PETR4' in linha:
+            tmp = linha.split(',') #[0: linha.find(',')]
+            a = Acao(tmp[0])
+            
+            c = Candle()
+            c.fechamento_atual = tmp[1]
+            c.abertura = tmp[2]
+            c.maximo = tmp[3]
+            c.minimo = tmp[4]
+            c.fechamento_anterior = tmp[5]
+            c.negocios = tmp[6]
+            c.quantidade_papeis = tmp[7]
+            c.volume_financeiro = tmp[8]
+            c.datahora = datetime.strptime(tmp[9][:-1], '%Y%m%d%H%M')
+    
+            if not a in acoes:
+                acoes.append(a)
+                acoes[acoes.index(a)].candles.append(c)
+            else:
+                acoes[acoes.index(a)].candles.append(c)
+    
+    f.close()
+    #print 'Numero de acoes: ' + str(len(acoes))
+    
+    #acoes.sort(cmp=lambda x,y: cmp(x.codigo, y.codigo))
+    
+    #for acao in acoes:
+    #    print acao.codigo + ', numero de candles: ' + str(len(acao.candles))
+    
+    return acoes
+    #inicial = datetime.strptime('20140101', '%Y%m%d')
+    #final = datetime.strptime('20141231', '%Y%m%d')
+    #acoes[0].plotar(inicial, final)
 
 '''
 x=[]
@@ -103,5 +106,3 @@ for linha in f:
 plt.plot(t,s)
 plt.show()
 '''
-
-f.close()

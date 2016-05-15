@@ -14,12 +14,14 @@ def pre_processa():
     noticias_js = []
     
     for line in arq:
-        try:
+            abertura = datetime.strptime("11:00", "%H:%M")
+            fechamento = datetime.strptime("19:00", "%H:%M")
             noticia = json.loads(line[:-2])
-            noticia['date'] = datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S')
-            noticias_js.append(noticia)
-        except:
-            continue
+            datahora = datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S')
+
+            if datahora.time() >= abertura.time() and datahora.time() <= fechamento.time():
+                noticia['date'] =   datahora
+                noticias_js.append(noticia)
         
     noticias_js.sort(cmp=lambda x, y: cmp(x['date'], y['date']))
         
@@ -45,7 +47,7 @@ def pre_processa():
     
     for noticia in noticias_js:
         aux = noticia
-        aux['text'] = BeautifulSoup(noticia['text'], 'html').get_text().lower().split()
+        aux['text'] = BeautifulSoup(noticia['text'], 'lxml').get_text().lower().split()
         noticias_whtml.append(aux)
         
     #=====================================================================================    
@@ -83,10 +85,58 @@ def pre_processa():
     
     return noticias
 
-def extrai_features(clean_data, field_name):
+def ordena_por_datahora(clean_data, field_text, field_date):
     news_text = pd.DataFrame()
-    news_text[field_name] = map(lambda field : field[field_name], clean_data)
+    news_text[field_text] = map(lambda field : field[field_text], clean_data)
+    news_text[field_date] = map(lambda field : field[field_date], clean_data)
+    news_text = news_text.sort_values('date')
+    return news_text
+
+def get_target(news, candles):
+    contador = 0
+    ultima_acao = 0
+    
+    feature_preco = []
+    target = []
+    for dh in news['date']:
+        i = ultima_acao
+        while (candles[i].datahora < dh):
+            i = i + 1
+        ultima_acao = i - 1
+        feature_preco.append(candles[ultima_acao].fechamento_atual)
+        variacao = 0
+        if candles[ultima_acao + 2].fechamento_atual > candles[ultima_acao].fechamento_atual:
+            variacao = 1
+        if candles[ultima_acao + 2].fechamento_atual < candles[ultima_acao].fechamento_atual:
+            variacao = -1
+        target.append(variacao)
+        #print str(str(dh) + ", " + str(candles[ultima_acao].datahora) + ": " + str(candles[ultima_acao].fechamento_atual) + ", " + str(candles[ultima_acao + 2].datahora) + ": "  + str(candles[ultima_acao + 2].fechamento_atual))
+    
+    aux = pd.DataFrame()
+    aux['preco'] = feature_preco
+    aux['alvo'] = target
+    return aux
+        
+def get_entrada(features, alvo):
+    entrada = pd.DataFrame()
+    entrada['alvo'] = alvo['alvo']
+    entrada['preco'] = alvo['preco']
+    aux = pd.DataFrame(features)
+    return entrada.join(aux)
+
+def gera_arquivo(entradas, arq):
+    f = open(arq, 'w')
+    for i, e in entradas.iterrows():
+        linha = str(e['alvo']) + " " + "0:" + str(e['preco'])
+        for i in range(1,5000):
+            linha = linha + " " + str(i) + ":" + str(e[i - 1])
+        linha = linha + "\n"
+        f.write(linha)
+    f.close()
+    
+    
+def extrai_features(news_text, fieldname):
     vectorizer = CountVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = 5000)
-    features = vectorizer.fit_transform(news_text[field_name])
+    features = vectorizer.fit_transform(news_text[fieldname])
     features = features.toarray()
     return features
