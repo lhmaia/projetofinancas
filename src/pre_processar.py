@@ -8,6 +8,25 @@ from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 
+n_features = 200
+PERCENTUAL_TRAIN = 60
+
+def get_file_to_cluster(saida):
+    arq = open('../Dados/news_sentimento.json', 'r')
+    out = open(saida, 'w')
+    for line in arq:
+        noticia = json.loads(line[:-2])
+        out.write("anonimo\t")
+        out.write(str(datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S'))[:10])
+        out.write("\t")
+        out.write(noticia['title'].encode('utf-8').strip())
+        out.write("\n")     
+    
+    arq.close()
+    out.close()
+    
+
+
 def pre_processa():
     arq = open('../Dados/news_sentimento.json', 'r')
     
@@ -125,18 +144,52 @@ def get_entrada(features, alvo):
     return entrada.join(aux)
 
 def gera_arquivo(entradas, arq):
-    f = open(arq, 'w')
+    train = 'dados/' + arq + '.train'
+    pred = 'dados/' + arq + '.pred'
+    ft = open(train, 'w')
+    fp = open(pred, 'w')
+    num_train = (len(entradas) * PERCENTUAL_TRAIN) / 100
+    conta = 0
     for i, e in entradas.iterrows():
         linha = str(e['alvo']) + " " + "0:" + str(e['preco'])
-        for i in range(1,5000):
-            linha = linha + " " + str(i) + ":" + str(e[i - 1])
+        for t in range(1,n_features):
+            freq = 0
+            if e[t - 1] > 0: freq = 1
+            #linha = linha + " " + str(t) + ":" + str(e[t - 1])
+            linha = linha + " " + str(t) + ":" + str(freq)
         linha = linha + "\n"
-        f.write(linha)
-    f.close()
+        conta = conta + 1
+        if conta < num_train:
+            ft.write(linha)
+        else:
+            fp.write(linha)
+    ft.close()
+    fp.close()
+    
+def gera_arquivo_indicadores(entradas, arq):
+    train = 'dados/' + arq + '.train'
+    pred = 'dados/' + arq + '.pred'
+    ft = open(train, 'w')
+    fp = open(pred, 'w')
+    num_train = (len(entradas) * PERCENTUAL_TRAIN) / 100
+    conta = 0
+    for i, e in entradas.iterrows():
+        linha = str(e['alvo']) + " " + "0:" + str(e['preco'])
+        linha = linha + " 1:" + str(e['sma'])
+        linha = linha + " 2:" + str(e['ifr'])
+        linha = linha + "\n"
+        conta = conta + 1
+        if conta < num_train:
+            ft.write(linha)
+        else:
+            fp.write(linha)
+            
+    ft.close()
+    fp.close()
     
     
 def extrai_features(news_text, fieldname):
-    vectorizer = CountVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = 5000)
+    vectorizer = CountVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = n_features)
     features = vectorizer.fit_transform(news_text[fieldname])
     features = features.toarray()
     return features
