@@ -7,12 +7,13 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-n_features = 200
-PERCENTUAL_TRAIN = 60
+n_features = 50
+PERCENTUAL_TRAIN = 80
 
 def get_file_to_cluster(saida):
-    arq = open('../Dados/news_sentimento.json', 'r')
+    arq = open('../Dados/news_2016.json', 'r')
     out = open(saida, 'w')
     for line in arq:
         noticia = json.loads(line[:-2])
@@ -27,23 +28,36 @@ def get_file_to_cluster(saida):
     
 
 
-def pre_processa():
-    arq = open('../Dados/news_sentimento.json', 'r')
+def pre_processa(nome_ativo):
+    ativo = nome_ativo.lower()
+    #arq = open('../Dados/news_sentimento.json', 'r')
+    arq = open('../Dados/news_2016.json', 'r')
+    entities = pd.read_csv("../Dados/DADOS2-entities.csv")
+    codigo_ativo = entities.loc[entities['slug'] == ativo]['id'].values[0]
     
     noticias_js = []
-    
-    for line in arq:
-            abertura = datetime.strptime("11:00", "%H:%M")
-            fechamento = datetime.strptime("19:00", "%H:%M")
-            noticia = json.loads(line[:-2])
-            datahora = datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S')
+    abertura = datetime.strptime("11:00", "%H:%M")
+    fechamento = datetime.strptime("19:00", "%H:%M")
 
+    for line in arq:            
+        noticia = json.loads(line[:-2])
+        if codigo_ativo in noticia['entities']:
+            datahora = datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S')
+            
             if datahora.time() >= abertura.time() and datahora.time() <= fechamento.time():
                 noticia['date'] =   datahora
                 noticias_js.append(noticia)
+                    
+    
         
     noticias_js.sort(cmp=lambda x, y: cmp(x['date'], y['date']))
-        
+    
+    arqteste = open('testedatahora.txt', 'w')
+    for n in noticias_js:
+        arqteste.write(str(n['date']) + "\n")
+    
+    arqteste.close()
+    
     #print len(noticias_js)
     #print noticias_js[0]['date']
     #print noticias_js[len(noticias_js) - 1]['date']
@@ -66,21 +80,10 @@ def pre_processa():
     
     for noticia in noticias_js:
         aux = noticia
-        aux['text'] = BeautifulSoup(noticia['text'], 'lxml').get_text().lower().split()
+        aux['text'] = BeautifulSoup(re.sub("[^a-zA-Z]", " ", noticia['text']), 'lxml').get_text().lower().split()
         noticias_whtml.append(aux)
         
     #=====================================================================================    
-    #removendo pontuacao e numeros
-    '''
-    noticias_so_letras = []
-    
-    conta_erros = 0
-    for noticia in noticias_whtml:
-        aux = noticia
-        aux['text'] = re.sub("[^a-zA-Z0-9]", " ", noticia['text']).lower().split()
-        noticias_so_letras.append(aux)
-    '''
-    #=====================================================================================
     #removendo stopwords
     noticias_wstopwords = []
     stpwords = set(stopwords.words('portuguese'))
@@ -117,38 +120,49 @@ def get_target(news, candles):
     
     feature_preco = []
     target = []
+    data_hora = []
     for dh in news['date']:
         i = ultima_acao
         while (candles[i].datahora < dh):
             i = i + 1
         ultima_acao = i - 1
         feature_preco.append(candles[ultima_acao].fechamento_atual)
+        data_hora.append(dh)
         variacao = 0
         if candles[ultima_acao + 2].fechamento_atual > candles[ultima_acao].fechamento_atual:
             variacao = 1
         if candles[ultima_acao + 2].fechamento_atual < candles[ultima_acao].fechamento_atual:
             variacao = -1
         target.append(variacao)
+        #target.append(candles[ultima_acao + 2].fechamento_atual)
         #print str(str(dh) + ", " + str(candles[ultima_acao].datahora) + ": " + str(candles[ultima_acao].fechamento_atual) + ", " + str(candles[ultima_acao + 2].datahora) + ": "  + str(candles[ultima_acao + 2].fechamento_atual))
     
     aux = pd.DataFrame()
     aux['preco'] = feature_preco
     aux['alvo'] = target
+    aux['data_hora'] = data_hora
     return aux
         
 def get_entrada(features, alvo):
     entrada = pd.DataFrame()
     entrada['alvo'] = alvo['alvo']
     entrada['preco'] = alvo['preco']
+    entrada['data_hora'] = alvo['data_hora']
     aux = pd.DataFrame(features)
     return entrada.join(aux)
 
-def gera_arquivo(entradas, arq):
+def gera_arquivo(entradas, arq, percentual = PERCENTUAL_TRAIN):
     train = 'dados/' + arq + '.train'
     pred = 'dados/' + arq + '.pred'
+    data_hora_pred = 'dados/' + arq + '.pred.date'
+    data_hora_train = 'dados/' + arq + '.train.date'
+    
     ft = open(train, 'w')
     fp = open(pred, 'w')
-    num_train = (len(entradas) * PERCENTUAL_TRAIN) / 100
+    ftd = open(data_hora_train, 'w')
+    fpd = open(data_hora_pred, 'w')
+    
+    num_train = (len(entradas) * percentual) / 100
     conta = 0
     for i, e in entradas.iterrows():
         linha = str(e['alvo']) + " " + "0:" + str(e['preco'])
@@ -161,17 +175,28 @@ def gera_arquivo(entradas, arq):
         conta = conta + 1
         if conta < num_train:
             ft.write(linha)
+            ftd.write(str(e['data_hora']) + "\n")
         else:
             fp.write(linha)
+            fpd.write(str(e['data_hora']) + "\n")
+    
+    ftd.close()
+    fpd.close()
     ft.close()
     fp.close()
     
-def gera_arquivo_indicadores(entradas, arq):
+def gera_arquivo_indicadores(entradas, arq, percentual = PERCENTUAL_TRAIN):
     train = 'dados/' + arq + '.train'
     pred = 'dados/' + arq + '.pred'
+    data_hora_pred = 'dados/' + arq + '.pred.date'
+    data_hora_train = 'dados/' + arq + '.train.date'
+    
     ft = open(train, 'w')
     fp = open(pred, 'w')
-    num_train = (len(entradas) * PERCENTUAL_TRAIN) / 100
+    ftd = open(data_hora_train, 'w')
+    fpd = open(data_hora_pred, 'w')
+    
+    num_train = (len(entradas) * percentual) / 100
     conta = 0
     for i, e in entradas.iterrows():
         linha = str(e['alvo']) + " " + "0:" + str(e['preco'])
@@ -179,17 +204,23 @@ def gera_arquivo_indicadores(entradas, arq):
         linha = linha + " 2:" + str(e['ifr'])
         linha = linha + "\n"
         conta = conta + 1
+        
         if conta < num_train:
             ft.write(linha)
+            ftd.write(str(e['data_hora']))
         else:
             fp.write(linha)
-            
+            fpd.write(str(e['data_hora']))
+    
+    ftd.close()
+    fpd.close()
     ft.close()
     fp.close()
     
     
 def extrai_features(news_text, fieldname):
-    vectorizer = CountVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = n_features)
+    #vectorizer = CountVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = n_features)
+    vectorizer = TfidfVectorizer(analyzer = "word", tokenizer = None, stop_words = None, max_features = n_features)
     features = vectorizer.fit_transform(news_text[fieldname])
     features = features.toarray()
     return features

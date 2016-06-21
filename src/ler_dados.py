@@ -5,7 +5,8 @@ from matplotlib import pyplot as plt
 
 def carrega_candles():
     #f = open('../Dados/dadosTrabalho.txt', 'r')
-    f = open('../Dados/20150725_candles_ibov_15min_10campos_comCabecalho.txt', 'r')
+    #f = open('../Dados/20150725_candles_ibov_15min_10campos_comCabecalho.txt', 'r')
+    f = open('../Dados/petr4diario.txt', 'r')
     
     
     acoes = []
