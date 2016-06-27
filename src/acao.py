@@ -65,13 +65,16 @@ class Acao:
         
         pred = pd.read_csv('dados/'+ nome_teste, delimiter=' ', usecols=[0, 1], header=None, names=['alvo', 'preco'])
         out = pd.read_csv('dados/'+ nome_pred, delimiter=' ', usecols=[0], header=None, names=['resultado'])
-        datahora = pd.read_csv('dados/' + nome_teste + '.date', usecols=[0], header=None, names=['datahora'])
+        datahora = pd.read_csv('dados/' + nome_teste + '.date', delimiter=';', usecols=[0, 1], header=None, names=['datahora', 'precoalvo'])
+        out_datahora = open('dados/' + nome_pred + '.datahora', 'w')
                 
         errosx = []
         errosy = []
         acertosx = []
         acertosy = []
+        out_datahora.write('datahora;preco;alvo;resultado\n')
         for i in range(0, len(pred)):
+            out_datahora.write(datahora['datahora'][i] + ';' + pred['preco'][i][2:] + ';' + str(datahora['precoalvo'][i]) + ';' +  str(pred['alvo'][i]) + ';' + str(out['resultado'][i]) + '\n')
             if pred['alvo'][i] == out['resultado'][i]:
                 acertosx.append(datahora['datahora'][i])
                 acertosy.append(float(pred['preco'][i][2:]))
@@ -79,11 +82,13 @@ class Acao:
                 errosx.append(datahora['datahora'][i])
                 errosy.append(float(pred['preco'][i][2:]))
                 
-    
+        out_datahora.close()
+        
         plt.plot(x, y)
         plt.plot(errosx, errosy, 'rx')
         plt.plot(acertosx, acertosy, 'gx')
-        plt.show()
+        plt.savefig('dados/' + nome_pred + '.png')
+        plt.close('all')
     
         
     def get_candles_dict(self):

@@ -4,6 +4,8 @@ import acao
 import pandas as pd
 import talib
 from sklearn import preprocessing
+from subprocess import call
+from datetime import datetime
 
 def get_indicadores(acao):
     candles = acao.get_candles_dict()
@@ -42,9 +44,8 @@ def get_indicadores(acao):
     
     return indicadores
 
-def get_entradas_svm():
+def get_entradas_svm(nome_ativo):
     #retorna dataframe com as entradas, utilizar pp.gera_arquivo para gerar arquivo para libsvm
-    nome_ativo = 'PETR4'
     
     acoes = acao.carrega_candles(nome_ativo)
     
@@ -60,10 +61,10 @@ def get_entradas_svm():
     
     return input_svm
 
-def get_entradas_svm_indicadores():
+def get_entradas_svm_indicadores(nome_ativo):
     #retorna dataframe com as entradas, utilizar pp.gera_arquivo para gerar arquivo para libsvm
     
-    acoes = acao.carrega_candles('PETR4')
+    acoes = acao.carrega_candles(nome_ativo)
     
     #newspp = pp.pre_processa()
     
@@ -72,16 +73,37 @@ def get_entradas_svm_indicadores():
     #alvo = pp.get_target(newspp_ordenado, acoes.candles)
     
     #news_features = pp.extrai_features(newspp_ordenado, 'text')
-    indicadores = get_indicadores(acoes)
+    
+
     
     #input_svm = pp.get_entrada(indicadores, alvo)
     
     return indicadores
 
-def executar(nome_arquivo, percentual=60):
-    input = get_entradas_svm()
+def executar_ativo(nome_ativo, nome_arquivo, percentual=60):
+    input = get_entradas_svm(nome_ativo)
     pp.gera_arquivo(input, nome_arquivo, percentual)
 
-def executar_indicadores(nome_arquivo, percentual=60):
-    input = get_entradas_svm_indicadores()
+def executar_indicadores(nome_ativo, nome_arquivo, percentual=60):
+    input = get_entradas_svm_indicadores(nome_ativo)
     pp.gera_arquivo_indicadores(input, nome_arquivo, percentual)
+    
+def executa_bloco():
+    ativos = pd.read_csv('../Dados/ativos.txt')
+    for ativo in ativos['sigla']:
+        nome_arquivo = ativo + 'news2016'
+        executar_ativo(ativo, nome_arquivo)
+
+def executa_svm_bloco():
+    ativos = pd.read_csv('../Dados/ativos.txt')
+    inicio = datetime(2016, 01, 28)
+    fim = datetime(2016, 02, 10)
+    for ativo in ativos['sigla']:
+        nome_arquivo = ativo + 'news2016'
+        call(['./executa_svm.sh', nome_arquivo])
+        acoes = acao.carrega_candles(ativo)
+        acoes.plotar_previsoes(nome_arquivo + '.pred', nome_arquivo + '.out', inicio, fim)
+        
+def executar():
+    executa_bloco()
+    executa_svm_bloco()

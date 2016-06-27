@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
 
 n_features = 50
 PERCENTUAL_TRAIN = 80
@@ -30,6 +31,7 @@ def get_file_to_cluster(saida):
 
 def pre_processa(nome_ativo):
     ativo = nome_ativo.lower()
+    print ativo
     #arq = open('../Dados/news_sentimento.json', 'r')
     arq = open('../Dados/news_2016.json', 'r')
     entities = pd.read_csv("../Dados/DADOS2-entities.csv")
@@ -121,6 +123,7 @@ def get_target(news, candles):
     feature_preco = []
     target = []
     data_hora = []
+    preco_alvo = []
     for dh in news['date']:
         i = ultima_acao
         while (candles[i].datahora < dh):
@@ -128,6 +131,7 @@ def get_target(news, candles):
         ultima_acao = i - 1
         feature_preco.append(candles[ultima_acao].fechamento_atual)
         data_hora.append(dh)
+        preco_alvo.append(candles[ultima_acao + 2].fechamento_atual)
         variacao = 0
         if candles[ultima_acao + 2].fechamento_atual > candles[ultima_acao].fechamento_atual:
             variacao = 1
@@ -138,6 +142,7 @@ def get_target(news, candles):
         #print str(str(dh) + ", " + str(candles[ultima_acao].datahora) + ": " + str(candles[ultima_acao].fechamento_atual) + ", " + str(candles[ultima_acao + 2].datahora) + ": "  + str(candles[ultima_acao + 2].fechamento_atual))
     
     aux = pd.DataFrame()
+    aux['preco_alvo'] = preco_alvo
     aux['preco'] = feature_preco
     aux['alvo'] = target
     aux['data_hora'] = data_hora
@@ -148,8 +153,33 @@ def get_entrada(features, alvo):
     entrada['alvo'] = alvo['alvo']
     entrada['preco'] = alvo['preco']
     entrada['data_hora'] = alvo['data_hora']
+    entrada['preco_alvo'] = alvo['preco_alvo']
     aux = pd.DataFrame(features)
     return entrada.join(aux)
+
+def executa_naive_bayes(features, alvo, percentual = PERCENTUAL_TRAIN):
+    entrada = pd.DataFrame()
+    entrada['preco'] = alvo['preco']
+    #entrada['data_hora'] = alvo['data_hora']
+    aux = pd.DataFrame(features)
+    
+    X = entrada.join(aux)
+    precos = []
+    for p in X['preco']:
+        precos.append(float(p))
+
+    num_train = (len(X) * percentual) / 100
+
+    X['preco'] = precos
+    Xt = X[0:num_train - 1]
+    Xp = X[num_train:len(X) - 1]
+    Yt = alvo['alvo'][0:num_train - 1]
+    Yp = alvo['alvo'][num_train:len(alvo) - 1]
+    clf = MultinomialNB()
+    clf.fit(Xt.values, Yt.values)
+    print clf.score(Xp.values, Yp.values)
+    print clf.predict(Xp.values)
+    
 
 def gera_arquivo(entradas, arq, percentual = PERCENTUAL_TRAIN):
     train = 'dados/' + arq + '.train'
@@ -175,10 +205,10 @@ def gera_arquivo(entradas, arq, percentual = PERCENTUAL_TRAIN):
         conta = conta + 1
         if conta < num_train:
             ft.write(linha)
-            ftd.write(str(e['data_hora']) + "\n")
+            ftd.write(str(e['data_hora']) + ';' + str(e['preco_alvo']) + '\n')
         else:
             fp.write(linha)
-            fpd.write(str(e['data_hora']) + "\n")
+            fpd.write(str(e['data_hora']) + ';' + str(e['preco_alvo']) + '\n')
     
     ftd.close()
     fpd.close()
@@ -207,10 +237,10 @@ def gera_arquivo_indicadores(entradas, arq, percentual = PERCENTUAL_TRAIN):
         
         if conta < num_train:
             ft.write(linha)
-            ftd.write(str(e['data_hora']))
+            ftd.write(str(e['data_hora']) + ';' + str(e['preco']) + '\n')
         else:
             fp.write(linha)
-            fpd.write(str(e['data_hora']))
+            fpd.write(str(e['data_hora']) + ';' + str(e['preco']) + '\n')
     
     ftd.close()
     fpd.close()
