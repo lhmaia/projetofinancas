@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.13)  26 JUN 2016 22:50
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.3.13)  28 JUN 2016 23:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -667,44 +667,45 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 182.
- (./modelo-ufmg.toc)
+ (./modelo-ufmg.toc [1
+
+
+])
 \tf@toc=\write3
 \openout3 = `modelo-ufmg.toc'.
 
- [1
-
-
-] (./modelo-ufmg.lof)
+ [2]
+(./modelo-ufmg.lof)
 \tf@lof=\write4
 \openout4 = `modelo-ufmg.lof'.
 
-[2
+ [3
 
 
 ] (./modelo-ufmg.lot)
 \tf@lot=\write5
 \openout5 = `modelo-ufmg.lot'.
 
- [3
+ [4
 
 ] (./modelo-ufmg.lsg)
 \tf@lsg=\write6
 \openout6 = `modelo-ufmg.lsg'.
 
- [4
+ [5
 
 ]
 \openout2 = `resumo.aux'.
 
- (./resumo.tex [5
+
+(./resumo.tex [6
 
 
 
 ])
 \openout2 = `abstract.aux'.
 
-
-(./abstract.tex [6
+ (./abstract.tex [7
 
 
 
@@ -714,32 +715,28 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <17.28> not available
 
  (./introducao.tex
 Cap\'{\i }tulo 1.
-
-LaTeX Warning: Citation `Nassirtoussi2014' on page 7 undefined on input line 9.
-
-
-[7
+[8
 
 
 
-]) [8]
+]) [9]
 \openout2 = `referencialTeorico.aux'.
 
  (./referencialTeorico.tex
 Cap\'{\i }tulo 2.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-) [9
+[10
 
 
 
-] [10]
+] [11]
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 46.
+ [12]) [13]
 \openout2 = `metodologia.aux'.
 
  (./metodologia.tex
 Cap\'{\i }tulo 3.
-) [11
+) [14
 
 
 
@@ -748,7 +745,7 @@ Cap\'{\i }tulo 3.
 
  (./resultados.tex
 Cap\'{\i }tulo 4.
-) [12
+) [15
 
 
 
@@ -757,11 +754,11 @@ Cap\'{\i }tulo 4.
 
  (./conclusao.tex
 Cap\'{\i }tulo 5.
-) [13
+) [16
 
 
 
-] (./modelo-ufmg.bbl) [14
+] (./modelo-ufmg.bbl) [17
 
 
 ]
@@ -774,7 +771,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 2.
 
 Apendice A.
-) [15
+) [18
 
 
 ]
@@ -784,31 +781,24 @@ Apendice A.
 +-------------------------------------------------------------------+
 (./modelo-ufmg.aux (./capa.aux) (./resumo.aux) (./abstract.aux)
 (./introducao.aux) (./referencialTeorico.aux) (./metodologia.aux)
-(./resultados.aux) (./conclusao.aux) (./apendice1.aux))
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+(./resultados.aux) (./conclusao.aux) (./apendice1.aux)) ) 
 Here is how much of TeX's memory you used:
- 4088 strings out of 493304
- 57012 string characters out of 6139871
- 133869 words of memory out of 5000000
- 7325 multiletter control sequences out of 15000+600000
- 37244 words of font info for 61 fonts, out of 8000000 for 9000
+ 4104 strings out of 493304
+ 57394 string characters out of 6139871
+ 131033 words of memory out of 5000000
+ 7340 multiletter control sequences out of 15000+600000
+ 40047 words of font info for 63 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,10n,41p,776b,257s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
-tmri8a.pfb>
-Output written on modelo-ufmg.pdf (16 pages, 66998 bytes).
+ 38i,6n,41p,776b,280s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/te
+xmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/t
+imes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on modelo-ufmg.pdf (19 pages, 75978 bytes).
 PDF statistics:
- 73 PDF objects out of 1000 (max. 8388607)
- 50 compressed objects within 1 object stream
+ 83 PDF objects out of 1000 (max. 8388607)
+ 57 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

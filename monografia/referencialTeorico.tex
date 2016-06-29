@@ -1,83 +1,75 @@
 
 \chapter{REFERENCIAL TEÓRICO}
 
+\section{Trabalhos Relacionados}
+Nesta seção analisamos alguns trabalhos relevantes em mineração de dados voltados para a aplicação no mercado financeiro.
 
-	A Tabela \ref{tabFluxoUsa} mostra as atividades que compõem o fluxo de usabilidade e o papel requerido ao agente para realizá-las. As atividades de Análise de contexto de uso e Avaliação de usabilidade são decompostas em sub-fluxos, suas descrições são mostradas nas Tabelas \ref{tabAna} e \ref{tabAval}, respectivamente.
+Em \cite{Mittermayer2004} é descrito o NewsCATS, um sistema que automaticamente analisa e classifica em categorias noticias da imprensa e partir dessa classificação provê recomendações para negociações na bolsa de valores.
 
-    \begin{table}[h]
-        \begin{center}
-    		\begin{tabular}{|c|c|}
-    			\hline
-                \textbf{Atividade} & \textbf{Papel requerido} \\ \hline
-    			Planejamento & Gerente de Usabilidade \\
-    			Controle  & \\
-    			\hline
-                Análise de contexto de uso &  \\
-                Definição das funções do produto &  \\
-                Prototipação de requisitos de interface & Analista de Usabilidade \\
-                Definição de requisitos e metas de usabilidade & \\
-                Revisão da análise de usabilidade & \\
-                \hline
-                Definição do estilo de interação & \\
-                Desenho da interação & Arquiteto de usabilidade \\
-                Revisão do desenho da interação & \\
-                \hline
-                Avaliação de usabilidade & Avaliador de Usabilidade  \\
-                \hline
-                Balanço final & Gerente de Usabilidade  \\
-                \hline
-    			%\multicolumn{3}{l}{\scriptsize Fonte: Indicar procedência.}\\
-    			%\multicolumn{3}{l}{\scriptsize Notas: Alguma especificação geral.}\\
-    			%\multicolumn{3}{l}{\scriptsize (1) Alguma nota específica}
-    		\end{tabular}
-    		\caption{Atividades do fluxo de usabilidade}
-        	\label{tabFluxoUsa}
-    	\end{center}
-    \end{table}
+Tendo objetivo selecionar uma estratégia de investimento que possa alcançar uma rentabilidade acima da média de mercado, o NewsCATS tenta prever tendencias nos preços das ações no momento imediatamente apos a publicação de notícias na imprensa. Ele trabalha com tres componentes, o primeiro utiliza tecnicas de pré-processamento para recuperar informações relevantes, o segundo classifica as nformações em categorias e o terceiro deriva, a partir das informações fornecidas pelos outros dois componentes, estratégias para investimento.
 
-    \begin{table}[h]
-        \begin{center}
-    		\begin{tabular}{|c|c|}
-    			\hline
-                \textbf{Atividade} & \textbf{Papel requerido} \\ \hline
-    			Planejamento &  \\
-                Preparação &  \\
-                Modelagem preliminar de  usuários  &  \\
-                Refinamento da modelagem de usuários &   \\
-                Definição do modelo mental & Analista de Usabilidade  \\
-                Análise de produtos concorrentes &  \\
-                Modelagem preliminar de tarefas &  \\
-                Refinamento da modelagem de tarefas &  \\
-                Balanço final &  \\
-                \hline
-    			%\multicolumn{3}{l}{\scriptsize Fonte: Indicar procedência.}\\
-    			%\multicolumn{3}{l}{\scriptsize Notas: Alguma especificação geral.}\\
-    			%\multicolumn{3}{l}{\scriptsize (1) Alguma nota específica}
-    		\end{tabular}
-    		\caption{Atividades do sub-fluxo de análise de contexto de uso}
-        	\label{tabAna}
-    	\end{center}
-    \end{table}
+O sistema foi implementado em JAVA, são utilizadas técnicas de pré-processamento como remoção de stop-words e steeming e a represenção das características dos textos é feita utilizando modelos como TF (term-frequency), IDF (Inverse Document Frequency) e TF x IDF. O algoritmo utilizado na classificação das notícias é o SVM.
 
-    \begin{table}[h]
-        \begin{center}
-    		\begin{tabular}{|c|c|}
-    			\hline
-                \textbf{Atividade} & \textbf{Papel requerido} \\ \hline
-    			Planejamento &  \\
-                Desenho &  \\
-                Implementação &  \\
-                Execução & Avaliador de Usabilidade  \\
-                Análise dos dados &  \\
-                Verificação do término &  \\
-                Balanço final &  \\
-                \hline
-    			%\multicolumn{3}{l}{\scriptsize Fonte: Indicar procedência.}\\
-    			%\multicolumn{3}{l}{\scriptsize Notas: Alguma especificação geral.}\\
-    			%\multicolumn{3}{l}{\scriptsize (1) Alguma nota específica}
-    		\end{tabular}
-    		\caption{Atividades do sub-fluxo de avaliação de usabilidade}
-        	\label{tabAval}
-    	\end{center}
-    \end{table}
+Colocar resultados do NewsCATS
 
+Um exemplo de trabalho utilizando redes sociais está presente em \cite{SulDennisYuan2014}. Nesse artigo os pesquisadores confrontam dados coletados no Twitter com retorno diário das ações de empresas que fazem parte do índice S\&P 500. Esse trabalho estabelece uma medida das emoções expressas nos tweets em relação a uma determinada empresa com o retorno das ações dessa empresa. O artigo trabalha com o conceito de valência emocional, podendo a valência ser positiva ou negativa.
+
+O artigo investiga o período pelo qual as informações publicadas no Twitter permanecem influenciando um ativo e a relevância do número de seguidores de um usuário na influência que ele exerce.
+
+A partir das análises os autores chegaram a conclusão que os tweets influenciam as ações dentro do mesmo dia e em um intervalo de 10 dias. Além disso usuários com um número de seguidores acima da média são capazes de exercer uma influência mais imediata.
+
+O trabalho de \cite{SchumakerChen2010} aborda a utilização de uma síntese de tecnicas de linguística, finanças e estatística para criar o Arizona Financial Text System (AZFinText), um sistema para previsao de preços discretos de ações.
+
+O AZFinText utiliza uma combinação entre os preços das ações e o texto de notícias financeiras para fazer previsões a respeito do preço discreto de uma ação em um período curto de tempo. O sistema confia na hipótese de que há uma pequena janela de tempo que o mercado leva para encontrar o equilíbrio após uma nova informação ser noticiada, dessa forma uma abordagem automatizada é capaz de explorar essa janela e conseguir lucros acima da média do mercado.
+
+Os autores utilizaram o algoritmo SVR, uma versão do SVM que utiliza regressão. As entradas para o algoritmo são as notícias e o preço atual dos ativos e o alvo é o preço a ser previsto. Para avaliar o retorno o AZFinText foi executado por um ano e obteve um retorno de 8,5% contra 5,62% do índice S&P 500.
+
+\section{Algoritmos Supervisionados}
+
+Os algoritmos supervisionados caracterizam-se por utilizar uma base de dados de treino, na qual para cada elemento da base o valor alvo é conhecido, ou seja, dada uma questão a ser respondida pelo algoritmo, a base de dados de treino consiste em um conjunto de pares de entradas e saídas.
+
+O algoritmo supervisionado analisa essa base de treino e a partir dela busca inferir uma função a partir da qual possam ser estabelecidas as saídas para novas entradas.
+
+Podemos enumerar algumas etapas básicas que devem ser realizadas na aplicação de algoritmos supervisionados:
+
+\begin{enumerate}
+	\item Determinar um conjunto de exemplos de treinamento para ser utilizado. Este conjunto deve ser representativo para modelar o problema a ser resolvido. Deve ser conseguido um conjunto de entradas e determinadas suas respectivas saídas, em alguns casos será necessário fazer um trabalho manual para conseguir um conjunto classificado.
+	\item Definir uma representação das características para as entradas de dados da função de aprendizagem. O mais comum é representar uma entrada como um vetor de características.
+	\item Escolher o algoritmo de  aprendizagem mais adequado.
+	\item Dependendo da escolha do algoritmo, algumas parametros são necessários para o processamento. Ajustar esses parametros é fundamental para um bom resultado. Uma técnica utilizada para chegar a valores de parametros satisfatórios é a validação cruzada.
+	\item Avaliar a acurácia da função de aprendizagem em um conjunto de testes.
+\end{enumerate}
+
+
+Nos experimentos realizados neste trabalho foram utilizados dois algoritmos supervisionados, o SVM e o Naive Bayes.
+
+\subsection{SVM - Support Vector Machine}
+
+A técnica de aprendizado de máquina SVM - Support Vector Machine - constitui um campo de pesquisa importante entre os algoritmos supervisionados. O SVM apresenta resultados superiores a outros algoritmos supervisionados, como as redes neurais, quando aplicado a campos como mineração de textos e reconhecimentos de imagens.
+
+Dado um conjunto de vetores de treinamento, onde os valores alvo dentro de cada vetor pertencem a duas classes, sendo essas classes linearmente separaveis, o SVM é capaz de encontrar um hiperplano que melhor separa os conjuntos de vetores nas suas devidas classes.
+
+Mais formalmente podemos dizer que dado Xi para i em {1, 2, …, N} os vetores do conjunto de treinamento. Esses vetores pertencem às classes W1 e W2, que assumimos como classes linearmente separaveis. O objetivo do SVM é encontrar um hiperplano g(x) = WTx + w0 = 0 que separa corretamente os vetores.
+
+Há situações em que os vetores não podem ser separados linearmente, nesses casos é aplicada uma transformação. Essa transformação consiste em uma função não-linear, conhecida como função kernel, que mapeia as entradas do conjunto de treinamento em uma dimensão na qual é possível encontrar um hiperplano que separe corretamente os vetores para suas respectivas classes.
+
+As funções kernel mais utilizadas são:
+
+
+	%linear: K(xi, xj) = xT i xj.
+	%• polynomial: K(xi, xj) = (γxiTxj + r)d, γ > 0.
+	%• radial basis function (RBF): K(xi, xj) = exp(−γkxi − xjk2), γ > 0.
+	%• sigmoid: K(xi, xj) = tanh(γxiTxj + r).
+	%Here, γ, r, and d are kernel parameters.
+
+
+
+O tipo de kernel e os parâmetros a serem utilizados variam de acordo com a natureza do problema no qual estão sendo aplicados.
+
+\subsection{Naive Bayes}
+
+Os algoritmos Naive Bayes constituem uma família de algoritmos baseadas na aplicação do Teorema de Bayes. O nome naive se deve ao fato do algoritmo assumir a hipótese de independência entre as características do problema a ser tratado.
+
+A aplicação do naive bayes na categorização de textos é bastante comum. O seu uso se justifica pela simplicidade do algoritmo e os bons resultados apresentados, em muitos casos alcançando um resultado melhor que abordagens mais complexas.
+
+As implementações do naive bayes variam e sua utilização depende da distribuição probabilística do conjunto de dados no qual será aplicado. Algumas implementações são naive Bayes multinomial, gaussiano e bernoulli.

@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import datetime
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
+from unicodedata import normalize
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -26,31 +27,44 @@ def get_file_to_cluster(saida):
     
     arq.close()
     out.close()
-    
 
+def haInterseccao(lista1, lista2):
+    for item in lista1:
+        if item in lista2: return True
+        if str(item) in lista2: return True
+        if int(item) in lista2: return True
+    return False
 
-def pre_processa(nome_ativo):
+def pre_processa(nome_ativo, listaCodigos = None):
     ativo = nome_ativo.lower()
     print ativo
     #arq = open('../Dados/news_sentimento.json', 'r')
     arq = open('../Dados/news_2016.json', 'r')
-    entities = pd.read_csv("../Dados/DADOS2-entities.csv")
-    codigo_ativo = entities.loc[entities['slug'] == ativo]['id'].values[0]
+
+    codigos = []
+    if listaCodigos is None and nome_ativo is not None:
+        entities = pd.read_csv("../Dados/DADOS2-entities.csv")
+        codigo_ativo = entities.loc[entities['slug'] == ativo]['id'].values[0]
+        codigos.append(codigo_ativo)
+    elif listaCodigos is not None:
+        codigos = listaCodigos
+        print codigos
     
     noticias_js = []
     abertura = datetime.strptime("11:00", "%H:%M")
     fechamento = datetime.strptime("19:00", "%H:%M")
 
-    for line in arq:            
+
+    for line in arq:
         noticia = json.loads(line[:-2])
-        if codigo_ativo in noticia['entities']:
+        #if codigo_ativo in str(noticia['entities']) or codigo_ativo in noticia['entities']:
+        if haInterseccao(codigos, noticia['entities']):
             datahora = datetime.strptime(noticia['date'], '%Y-%m-%dT%H:%M:%S')
-            
             if datahora.time() >= abertura.time() and datahora.time() <= fechamento.time():
-                noticia['date'] =   datahora
+                noticia['date'] = datahora
                 noticias_js.append(noticia)
                     
-    
+    print len(noticias_js)
         
     noticias_js.sort(cmp=lambda x, y: cmp(x['date'], y['date']))
     
@@ -82,7 +96,8 @@ def pre_processa(nome_ativo):
     
     for noticia in noticias_js:
         aux = noticia
-        aux['text'] = BeautifulSoup(re.sub("[^a-zA-Z]", " ", noticia['text']), 'lxml').get_text().lower().split()
+        texto = normalize('NFD', noticia['text']).encode('ASCII', 'ignore')
+        aux['text'] = BeautifulSoup(re.sub("[^a-zA-Z]", " ", texto), 'lxml').get_text().lower().split()
         noticias_whtml.append(aux)
         
     #=====================================================================================    
@@ -92,7 +107,7 @@ def pre_processa(nome_ativo):
     
     for noticia in noticias_whtml:
         aux = noticia
-        aux['text'] = [w for w in noticia['text'] if not w in stpwords]
+        aux['text'] = [w for w in noticia['text'] if not w in stpwords and len(w) > 2]
         noticias_wstopwords.append(aux)
     
     #======================================================================================
@@ -126,17 +141,18 @@ def get_target(news, candles):
     preco_alvo = []
     for dh in news['date']:
         i = ultima_acao
-        while (candles[i].datahora < dh):
+        while (i < len(candles) and candles[i].datahora < dh):
             i = i + 1
         ultima_acao = i - 1
         feature_preco.append(candles[ultima_acao].fechamento_atual)
         data_hora.append(dh)
         preco_alvo.append(candles[ultima_acao + 2].fechamento_atual)
         variacao = 0
-        if candles[ultima_acao + 2].fechamento_atual > candles[ultima_acao].fechamento_atual:
-            variacao = 1
-        if candles[ultima_acao + 2].fechamento_atual < candles[ultima_acao].fechamento_atual:
-            variacao = -1
+        if (ultima_acao + 2 < len(candles)):
+            if candles[ultima_acao + 2].fechamento_atual > candles[ultima_acao].fechamento_atual:
+                variacao = 1
+            if candles[ultima_acao + 2].fechamento_atual < candles[ultima_acao].fechamento_atual:
+                variacao = -1
         target.append(variacao)
         #target.append(candles[ultima_acao + 2].fechamento_atual)
         #print str(str(dh) + ", " + str(candles[ultima_acao].datahora) + ": " + str(candles[ultima_acao].fechamento_atual) + ", " + str(candles[ultima_acao + 2].datahora) + ": "  + str(candles[ultima_acao + 2].fechamento_atual))

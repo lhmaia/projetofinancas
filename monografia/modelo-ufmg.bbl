@@ -22,4 +22,30 @@ Dispon{\'\i}vel em:
 ISSN 0957-4174.
 Dispon{\'\i}vel em: $<$http://dx.doi.org/10.1016/j.eswa.2014.06.009$>$.}
 
+\bibitem{Mittermayer2004}
+\abntrefinfo{Mittermayer}{MITTERMAYER}{2004}
+{MITTERMAYER, M.-A. Forecasting intraday stock price trends with text mining
+  techniques. In:  \emph{Proceedings of the Proceedings of the 37th Annual
+  Hawaii International Conference on System Sciences (HICSS'04) - Track 3 -
+  Volume 3}. Washington, DC, USA: IEEE Computer Society, 2004.  (HICSS '04), p.
+  30064.2--.
+ISBN 0-7695-2056-1. Dispon{\'\i}vel em:
+  $<$http://dl.acm.org/citation.cfm?id=962751.962898$>$.}
+
+\bibitem{SulDennisYuan2014}
+\abntrefinfo{Sul, Dennis e Yuan}{SUL; DENNIS; YUAN}{2014}
+{SUL, H.; DENNIS, A.~R.; YUAN, L.~I. Trading on twitter: The financial
+  information content of emotion in social media. In:  \emph{2014 47th Hawaii
+  International Conference on System Sciences}. [S.l.: s.n.], 2014. p.
+  806--815.
+ISSN 1530-1605.}
+
+\bibitem{SchumakerChen2010}
+\abntrefinfo{Schumaker e Chen}{SCHUMAKER; CHEN}{2010}
+{SCHUMAKER, R.~P.; CHEN, H. A discrete stock price prediction engine based on
+  financial news.
+\emph{Computer}, IEEE Computer Society, Los Alamitos, CA, USA, v.~43, n.~1, p.
+  51--56, 2010.
+ISSN 0018-9162.}
+
 \end{thebibliography}

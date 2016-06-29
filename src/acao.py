@@ -116,7 +116,7 @@ def carrega_candles(nome_acao):
     a = Acao(nome_acao)
     
     for linha in f:
-        if nome_acao in linha:
+        if nome_acao.upper() in linha:
             tmp = linha.split(',')
             
             c = Candle()
